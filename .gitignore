@@ -32,4 +32,4 @@ out/
 .vscode/
 
 ### eclipse ###
-bin
+bin/
