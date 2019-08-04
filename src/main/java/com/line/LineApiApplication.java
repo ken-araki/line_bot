@@ -13,7 +13,6 @@ import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 @SpringBootApplication
 @LineMessageHandler
 public class LineApiApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(LineApiApplication.class, args);
 	}
