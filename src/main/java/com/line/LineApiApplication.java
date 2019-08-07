@@ -2,6 +2,7 @@ package com.line;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.MessageEvent;
@@ -11,6 +12,7 @@ import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
 @SpringBootApplication
+@EnableScheduling
 @LineMessageHandler
 public class LineApiApplication {
 	public static void main(String[] args) {
@@ -20,7 +22,7 @@ public class LineApiApplication {
 	@EventMapping
 	public TextMessage handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
 		System.out.println("event: " + event);
-		return new TextMessage("hoge: " + event.getMessage().getText());
+		return new TextMessage(event.getMessage().getText());
 	}
 
 	@EventMapping
