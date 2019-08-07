@@ -13,7 +13,7 @@ public class ScheduleController {
 	
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 	
-	@Scheduled(cron = "0 * * * *", zone = "Asia/Tokyo")
+	@Scheduled(cron = "20,25,30 0 * * *", zone = "Asia/Tokyo")
 	public TextMessage execute() {
 		return new TextMessage(sdf.format(new Date()));
 	}
