@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ScheduleController {
 
 	private static final Logger log = LoggerFactory.getLogger(ScheduleController.class);
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/DD(E) HH:mm:ss");
 	private final LineProperties lineProperties;
 	private final LineMessagingClient lineMessagingClient;
 
@@ -33,14 +33,33 @@ public class ScheduleController {
 		this.lineMessagingClient = lineMessagingClient;
 	}
 
-	@Scheduled(cron = "0 */5 * * * *")
-	public void execute() {
+	@Scheduled(cron = "0 0 23 1-7,15-21 * 4")
+	public void pushAlert() {
 		try {
+			log.info("exec pushAlert(). date: " + sdf.format(new Date()));
 			final BotApiResponse response = lineMessagingClient.pushMessage(new PushMessage(lineProperties.getId(),
-					new TemplateMessage("test Message: " + sdf.format(new Date()),
-							new ConfirmTemplate("are you ok？",
-									new MessageAction("yes", "no"),
-									new MessageAction("Yes", "No")
+					new TemplateMessage("明日は資源ごみの日です。",
+							new ConfirmTemplate("準備はいいですか？",
+									new MessageAction("はい", "大丈夫です"),
+									new MessageAction("いいえ", "忘れてました")
+							)
+					)
+			)).get();
+			log.info("Sent messages: {}", response);
+		} catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@Scheduled(cron = "0 0 8 1-7,15-21 * 5")
+	public void remaindAlert() {
+		try {
+			log.info("exec pushAlert(). date: " + sdf.format(new Date()));
+			final BotApiResponse response = lineMessagingClient.pushMessage(new PushMessage(lineProperties.getId(),
+					new TemplateMessage("今日は資源ごみの日です。 日付：" + sdf.format(new Date()),
+							new ConfirmTemplate("準備はいいですか？",
+									new MessageAction("はい", "大丈夫です"),
+									new MessageAction("いいえ", "忘れてました")
 							)
 					)
 			)).get();
