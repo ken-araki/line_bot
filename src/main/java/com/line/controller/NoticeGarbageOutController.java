@@ -1,7 +1,5 @@
 package com.line.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import org.slf4j.Logger;
@@ -24,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 public class NoticeGarbageOutController {
 
 	private static final Logger log = LoggerFactory.getLogger(NoticeGarbageOutController.class);
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/DD(E) HH:mm:ss");
 	private final LineProperties lineProperties;
 	private final LineMessagingClient lineMessagingClient;
 
@@ -36,10 +33,10 @@ public class NoticeGarbageOutController {
 	/**
 	 * 「資源ごみ」の前日夜に通知を出す
 	 */
-	@Scheduled(cron = "0 0 22-23 1-7,15-21 * 4")
+	@Scheduled(cron = "0 0 21-23 1-7,15-21 * 4", zone = "Asia/Tokyo")
 	public void executeResourcesPrevious() {
 		try {
-			log.info("exec pushAlert(). date: " + sdf.format(new Date()));
+			log.info("exec executeResourcesPrevious()");
 			final BotApiResponse response = lineMessagingClient.pushMessage(
 					new PushMessage(lineProperties.getId(),new TemplateMessage("明日は資源ごみの日です。", null))
 			).get();
@@ -52,10 +49,10 @@ public class NoticeGarbageOutController {
 	/**
 	 * 「資源ごみ」の当日朝に通知を出す
 	 */
-	@Scheduled(cron = "0 0 8 1-7,15-21 * 5")
+	@Scheduled(cron = "0 0 8 1-7,15-21 * 5", zone = "Asia/Tokyo")
 	public void executeResources() {
 		try {
-			log.info("exec pushAlert(). date: " + sdf.format(new Date()));
+			log.info("exec executeResources()");
 			final BotApiResponse response = lineMessagingClient.pushMessage(new PushMessage(lineProperties.getId(),
 					new TemplateMessage("今日は資源ごみの日です。",
 							new ConfirmTemplate("準備はいいですか？",
