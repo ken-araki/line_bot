@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class KeepRunningController {
 
-	private static final Logger log = LoggerFactory.getLogger(ScheduleController.class);
+	private static final Logger log = LoggerFactory.getLogger(KeepRunningController.class);
 
 	/**
 	 * heroku を起動し続ける
