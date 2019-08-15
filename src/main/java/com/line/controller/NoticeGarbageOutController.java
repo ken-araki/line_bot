@@ -21,62 +21,49 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-public class ScheduleController {
+public class NoticeGarbageOutController {
 
-	private static final Logger log = LoggerFactory.getLogger(ScheduleController.class);
+	private static final Logger log = LoggerFactory.getLogger(NoticeGarbageOutController.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/DD(E) HH:mm:ss");
 	private final LineProperties lineProperties;
 	private final LineMessagingClient lineMessagingClient;
 
-	ScheduleController(LineProperties lineProperties, LineMessagingClient lineMessagingClient) {
+	NoticeGarbageOutController(LineProperties lineProperties, LineMessagingClient lineMessagingClient) {
 		this.lineProperties = lineProperties;
 		this.lineMessagingClient = lineMessagingClient;
 	}
 
-	@Scheduled(cron = "0 0 23 1-7,15-21 * 4")
-	public void pushAlert() {
+	/**
+	 * 「資源ごみ」の前日夜に通知を出す
+	 */
+	@Scheduled(cron = "0 0 22-23 1-7,15-21 * 4")
+	public void executeResourcesPrevious() {
 		try {
 			log.info("exec pushAlert(). date: " + sdf.format(new Date()));
-			final BotApiResponse response = lineMessagingClient.pushMessage(new PushMessage(lineProperties.getId(),
-					new TemplateMessage("明日は資源ごみの日です。",
-							new ConfirmTemplate("準備はいいですか？",
-									new MessageAction("はい", "大丈夫です"),
-									new MessageAction("いいえ", "忘れてました")
-							)
-					)
-			)).get();
-			log.info("Sent messages: {}", response);
-		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	@Scheduled(cron = "0 0 8 1-7,15-21 * 5")
-	public void remaindAlert() {
-		try {
-			log.info("exec pushAlert(). date: " + sdf.format(new Date()));
-			final BotApiResponse response = lineMessagingClient.pushMessage(new PushMessage(lineProperties.getId(),
-					new TemplateMessage("今日は資源ごみの日です。 日付：" + sdf.format(new Date()),
-							new ConfirmTemplate("準備はいいですか？",
-									new MessageAction("はい", "大丈夫です"),
-									new MessageAction("いいえ", "忘れてました")
-							)
-					)
-			)).get();
+			final BotApiResponse response = lineMessagingClient.pushMessage(
+					new PushMessage(lineProperties.getId(),new TemplateMessage("明日は資源ごみの日です。", null))
+			).get();
 			log.info("Sent messages: {}", response);
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	@Scheduled(cron = "0 30 18 * * *")
-	public void remaindTest() {
+	/**
+	 * 「資源ごみ」の当日朝に通知を出す
+	 */
+	@Scheduled(cron = "0 0 8 1-7,15-21 * 5")
+	public void executeResources() {
 		try {
 			log.info("exec pushAlert(). date: " + sdf.format(new Date()));
-			final BotApiResponse response = lineMessagingClient.pushMessage(
-					new PushMessage(lineProperties.getId(), new TemplateMessage("test 日付：" + sdf.format(new Date()), null)
+			final BotApiResponse response = lineMessagingClient.pushMessage(new PushMessage(lineProperties.getId(),
+					new TemplateMessage("今日は資源ごみの日です。",
+							new ConfirmTemplate("準備はいいですか？",
+									new MessageAction("はい", "大丈夫です"),
+									new MessageAction("いいえ", "忘れてました")
+							)
 					)
-			).get();
+			)).get();
 			log.info("Sent messages: {}", response);
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
