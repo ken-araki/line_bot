@@ -68,4 +68,18 @@ public class ScheduleController {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Scheduled(cron = "0 30 18 * * *")
+	public void remaindTest() {
+		try {
+			log.info("exec pushAlert(). date: " + sdf.format(new Date()));
+			final BotApiResponse response = lineMessagingClient.pushMessage(
+					new PushMessage(lineProperties.getId(), new TemplateMessage("test 日付：" + sdf.format(new Date()), null)
+					)
+			).get();
+			log.info("Sent messages: {}", response);
+		} catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
