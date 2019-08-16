@@ -12,10 +12,17 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "ark.line")
 public class LineProperties {
 	private String id;
+	private String host;
 	public String getId() {
 		return this.id;
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getHost() {
+		return this.host;
+	}
+	public void setHost(String host) {
+		this.host = host;
 	}
 }

@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.line.config.LineProperties;
+import com.linecorp.bot.client.LineMessagingClient;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -29,6 +32,12 @@ public class KeepRunningController {
 	HttpServletResponse response;
 	@Autowired
 	ResourceLoader resourceLoader;
+	
+	private final LineProperties lineProperties;
+
+	KeepRunningController(LineProperties lineProperties) {
+		this.lineProperties = lineProperties;
+	}
 
 	/**
 	 * heroku を起動し続ける
@@ -36,7 +45,8 @@ public class KeepRunningController {
 	 */
 	@Scheduled(cron = "0 */10 * * * *")
 	public void execute() {
-		Resource resource = resourceLoader.getResource("http://localhost/keepRunning");
+		String url = "https://" + lineProperties.getHost() + "/keepRunning";
+		Resource resource = resourceLoader.getResource(url);
 		try (InputStream in = resource.getInputStream()) {
 			String content = StreamUtils.copyToString(in, StandardCharsets.UTF_8);
 			log.info("keepRunning exec. result: {}", content);
