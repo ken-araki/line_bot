@@ -13,6 +13,7 @@ import lombok.Setter;
 public class LineProperties {
 	private String id;
 	private String host;
+	private String port;
 	public String getId() {
 		return this.id;
 	}
@@ -24,5 +25,11 @@ public class LineProperties {
 	}
 	public void setHost(String host) {
 		this.host = host;
+	}
+	public String getPort() {
+		return this.port;
+	}
+	public void setPort(String port) {
+		this.port = port;
 	}
 }
