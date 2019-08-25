@@ -1,6 +1,5 @@
 package com.line.controller;
 
-import java.util.StringJoiner;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
@@ -15,7 +14,7 @@ import com.line.config.LineProperties;
 import com.line.service.GetTrainDelayResourceService;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.PushMessage;
-import com.linecorp.bot.model.message.TemplateMessage;
+import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.response.BotApiResponse;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 public class NoticeTrainDelayController {
 	/** log */
 	private static final Logger log = LoggerFactory.getLogger(NoticeTrainDelayController.class);
+
+	/** 改行 */
+	private final String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	/** アプリ設定情報 */
 	private final LineProperties lineProperties;
@@ -56,20 +58,19 @@ public class NoticeTrainDelayController {
 	 */
 	@Scheduled(cron = "0 */5 * * * *", zone = "Asia/Tokyo")
 	public void executeJrEast() {
-		String result = null;
+		StringBuilder sb = new StringBuilder(128);
 		TrainDelay[] list = getTrainDelayResourceService.getDelayJrEast();
 		if (list.length > 0) {
-			StringJoiner sj = new StringJoiner(",");
-			Stream.of(list).forEach(l -> sj.add(l.getName()));
-			result = String.format("電車遅延している沿線は、%s", sj.toString());
+			sb.append("遅延している沿線は以下です。");
+			Stream.of(list).forEach(l -> sb.append(LINE_SEPARATOR).append(l.getName()));
 		} else {
-			result = "遅延している沿線はありません。";
+			sb.append("遅延している沿線はありません。");
 		}
 
 		try {
 			log.info("exec executeJrEast()");
 			final BotApiResponse response = lineMessagingClient.pushMessage(
-					new PushMessage(lineProperties.getId(), new TemplateMessage(result, null))
+					new PushMessage(lineProperties.getId(), new TextMessage(sb.toString()))
 			).get();
 			log.info("Sent messages: {}", response);
 		} catch (InterruptedException | ExecutionException e) {
