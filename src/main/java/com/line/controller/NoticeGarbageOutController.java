@@ -12,6 +12,7 @@ import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.action.MessageAction;
 import com.linecorp.bot.model.message.TemplateMessage;
+import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.template.ConfirmTemplate;
 import com.linecorp.bot.model.response.BotApiResponse;
 
@@ -38,7 +39,7 @@ public class NoticeGarbageOutController {
 		try {
 			log.info("exec executeResourcesPrevious()");
 			final BotApiResponse response = lineMessagingClient.pushMessage(
-					new PushMessage(lineProperties.getId(),new TemplateMessage("明日は資源ごみの日です。", null))
+					new PushMessage(lineProperties.getId(),new TextMessage("明日は資源ごみの日です。"))
 			).get();
 			log.info("Sent messages: {}", response);
 		} catch (InterruptedException | ExecutionException e) {

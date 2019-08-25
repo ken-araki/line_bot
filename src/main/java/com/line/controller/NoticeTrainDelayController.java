@@ -56,7 +56,7 @@ public class NoticeTrainDelayController {
 	/**
 	 * JR東日本の電車遅延情報を通知する
 	 */
-	@Scheduled(cron = "0 */5 * * * *", zone = "Asia/Tokyo")
+	@Scheduled(cron = "0 5 8 * * *", zone = "Asia/Tokyo")
 	public void executeJrEast() {
 		StringBuilder sb = new StringBuilder(128);
 		TrainDelay[] list = getTrainDelayResourceService.getDelayJrEast();
