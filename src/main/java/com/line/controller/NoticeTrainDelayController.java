@@ -1,5 +1,6 @@
 package com.line.controller;
 
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
@@ -10,10 +11,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
 import com.line.bean.TrainDelay;
-import com.line.config.LineProperties;
 import com.line.service.GetTrainDelayResourceService;
 import com.linecorp.bot.client.LineMessagingClient;
-import com.linecorp.bot.model.PushMessage;
+import com.linecorp.bot.model.Broadcast;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.response.BotApiResponse;
 
@@ -33,8 +33,6 @@ public class NoticeTrainDelayController {
 	/** 改行 */
 	private final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-	/** アプリ設定情報 */
-	private final LineProperties lineProperties;
 	/** LINE bot接続クライアント */
 	private final LineMessagingClient lineMessagingClient;
 
@@ -48,8 +46,7 @@ public class NoticeTrainDelayController {
 	 * @param lineProperties アプリ設定情報
 	 * @param lineMessagingClient LINE bot接続クライアント
 	 */
-	NoticeTrainDelayController(LineProperties lineProperties, LineMessagingClient lineMessagingClient) {
-		this.lineProperties = lineProperties;
+	NoticeTrainDelayController(LineMessagingClient lineMessagingClient) {
 		this.lineMessagingClient = lineMessagingClient;
 	}
 
@@ -59,7 +56,7 @@ public class NoticeTrainDelayController {
 	@Scheduled(cron = "0 5 8 * * *", zone = "Asia/Tokyo")
 	public void executeJrEast() {
 		StringBuilder sb = new StringBuilder(128);
-		TrainDelay[] list = getTrainDelayResourceService.getDelayJrEast();
+		TrainDelay[] list = getTrainDelayResourceService.getDelay();
 		if (list.length > 0) {
 			sb.append("遅延している沿線は以下です。");
 			Stream.of(list).forEach(l -> sb.append(LINE_SEPARATOR).append(l.getName()));
@@ -69,8 +66,8 @@ public class NoticeTrainDelayController {
 
 		try {
 			log.info("exec executeJrEast()");
-			final BotApiResponse response = lineMessagingClient.pushMessage(
-					new PushMessage(lineProperties.getId(), new TextMessage(sb.toString()))
+			final BotApiResponse response = lineMessagingClient.broadcast(
+					new Broadcast(Collections.singletonList(new TextMessage(sb.toString())), false)
 			).get();
 			log.info("Sent messages: {}", response);
 		} catch (InterruptedException | ExecutionException e) {
