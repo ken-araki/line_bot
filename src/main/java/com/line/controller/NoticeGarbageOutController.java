@@ -1,5 +1,6 @@
 package com.line.controller;
 
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 import org.slf4j.Logger;
@@ -7,13 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
-import com.line.config.LineProperties;
 import com.linecorp.bot.client.LineMessagingClient;
-import com.linecorp.bot.model.PushMessage;
-import com.linecorp.bot.model.action.MessageAction;
-import com.linecorp.bot.model.message.TemplateMessage;
+import com.linecorp.bot.model.Broadcast;
 import com.linecorp.bot.model.message.TextMessage;
-import com.linecorp.bot.model.message.template.ConfirmTemplate;
 import com.linecorp.bot.model.response.BotApiResponse;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 public class NoticeGarbageOutController {
 
 	private static final Logger log = LoggerFactory.getLogger(NoticeGarbageOutController.class);
-	private final LineProperties lineProperties;
 	private final LineMessagingClient lineMessagingClient;
 
-	NoticeGarbageOutController(LineProperties lineProperties, LineMessagingClient lineMessagingClient) {
-		this.lineProperties = lineProperties;
+	NoticeGarbageOutController(LineMessagingClient lineMessagingClient) {
 		this.lineMessagingClient = lineMessagingClient;
 	}
 
@@ -38,8 +33,8 @@ public class NoticeGarbageOutController {
 	public void executeResourcesPrevious() {
 		try {
 			log.info("exec executeResourcesPrevious()");
-			final BotApiResponse response = lineMessagingClient.pushMessage(
-					new PushMessage(lineProperties.getId(),new TextMessage("明日は資源ごみの日です。"))
+			final BotApiResponse response = lineMessagingClient.broadcast(
+					new Broadcast(Collections.singletonList(new TextMessage("明日は資源ごみの日です。")), false)
 			).get();
 			log.info("Sent messages: {}", response);
 		} catch (InterruptedException | ExecutionException e) {
@@ -54,14 +49,9 @@ public class NoticeGarbageOutController {
 	public void executeResources() {
 		try {
 			log.info("exec executeResources()");
-			final BotApiResponse response = lineMessagingClient.pushMessage(new PushMessage(lineProperties.getId(),
-					new TemplateMessage("今日は資源ごみの日です。",
-							new ConfirmTemplate("準備はいいですか？",
-									new MessageAction("はい", "大丈夫です"),
-									new MessageAction("いいえ", "忘れてました")
-							)
-					)
-			)).get();
+			final BotApiResponse response = lineMessagingClient.broadcast(
+					new Broadcast(Collections.singletonList(new TextMessage("明日は資源ごみの日です。")), false)
+			).get();
 			log.info("Sent messages: {}", response);
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
