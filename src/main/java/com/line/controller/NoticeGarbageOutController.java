@@ -41,20 +41,4 @@ public class NoticeGarbageOutController {
 			throw new RuntimeException(e);
 		}
 	}
-
-	/**
-	 * 「資源ごみ」の当日朝に通知を出す
-	 */
-	@Scheduled(cron = "0 0 8 1-7,15-21 * 5", zone = "Asia/Tokyo")
-	public void executeResources() {
-		try {
-			log.info("exec executeResources()");
-			final BotApiResponse response = lineMessagingClient.broadcast(
-					new Broadcast(Collections.singletonList(new TextMessage("明日は資源ごみの日です。")), false)
-			).get();
-			log.info("Sent messages: {}", response);
-		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(e);
-		}
-	}
 }
