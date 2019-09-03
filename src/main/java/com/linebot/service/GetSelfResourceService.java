@@ -1,4 +1,4 @@
-package com.line.service;
+package com.linebot.service;
 
 import java.time.Duration;
 
@@ -6,7 +6,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
 
-import com.line.config.LineProperties;
+import com.linebot.config.LineProperties;
 
 @Service
 public class GetSelfResourceService {

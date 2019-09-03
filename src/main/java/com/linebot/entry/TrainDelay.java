@@ -1,4 +1,4 @@
-package com.line.bean;
+package com.linebot.entry;
 
 public class TrainDelay {
 	String name;

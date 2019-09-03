@@ -1,4 +1,4 @@
-package com.line.controller;
+package com.linebot.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,29 +8,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.line.service.GetSelfResourceService;
+import com.linebot.service.GetSelfResourceService;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * herokuを起動し続けるようにする
- * 
- * @author arakikenji
- */
 @Slf4j
 @RestController
 public class KeepRunningController {
-	/** ログ */
 	private static final Logger log = LoggerFactory.getLogger(KeepRunningController.class);
-
-	/** 設定値 */
 	private final GetSelfResourceService getSelfResourceService;
 
-	/**
-	 * コンストラクタ
-	 * 
-	 * @param lineProperties 設定ファイル
-	 */
 	KeepRunningController(GetSelfResourceService getSelfResourceService) {
 		this.getSelfResourceService = getSelfResourceService;
 	}

@@ -1,4 +1,4 @@
-package com.line.service;
+package com.linebot.service;
 
 import java.time.Duration;
 import java.util.stream.Stream;
@@ -7,22 +7,12 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
 
-import com.line.bean.TrainDelay;
+import com.linebot.entry.TrainDelay;
 
-/**
- * 電車遅延情報を取得する
- * @author arakikenji
- */
 @Service
 public class GetTrainDelayResourceService {
-	/** restOperations */
 	RestOperations restOperations;
 	
-	/**
-	 * コンストラクタ
-	 * 
-	 * @param restTemplateBuilder
-	 */
 	public GetTrainDelayResourceService(RestTemplateBuilder restTemplateBuilder) {
 		String url = "https://tetsudo.rti-giken.jp";
 		this.restOperations = restTemplateBuilder

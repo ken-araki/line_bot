@@ -1,4 +1,4 @@
-package com.line.controller;
+package com.linebot.controller;
 
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 public class NoticeGarbageOutController {
-
 	private static final Logger log = LoggerFactory.getLogger(NoticeGarbageOutController.class);
 	private final LineMessagingClient lineMessagingClient;
 
@@ -26,9 +25,6 @@ public class NoticeGarbageOutController {
 		this.lineMessagingClient = lineMessagingClient;
 	}
 
-	/**
-	 * 「資源ごみ」の前日夜に通知を出す
-	 */
 	@Scheduled(cron = "0 0 21-23 1-7,15-21 * 4", zone = "Asia/Tokyo")
 	public void executeResourcesPrevious() {
 		try {

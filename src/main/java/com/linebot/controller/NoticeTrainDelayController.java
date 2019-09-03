@@ -1,4 +1,4 @@
-package com.line.controller;
+package com.linebot.controller;
 
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
-import com.line.bean.TrainDelay;
-import com.line.service.GetTrainDelayResourceService;
+import com.linebot.entry.TrainDelay;
+import com.linebot.service.GetTrainDelayResourceService;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.Broadcast;
 import com.linecorp.bot.model.message.TextMessage;
@@ -19,40 +19,20 @@ import com.linecorp.bot.model.response.BotApiResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * 電車遅延している沿線を通知する
- * 
- * @author arakikenji
- */
 @Slf4j
 @Controller
 public class NoticeTrainDelayController {
-	/** log */
 	private static final Logger log = LoggerFactory.getLogger(NoticeTrainDelayController.class);
-
-	/** 改行 */
 	private final String LINE_SEPARATOR = System.getProperty("line.separator");
-
-	/** LINE bot接続クライアント */
 	private final LineMessagingClient lineMessagingClient;
 
-	/** 電車遅延取得サービス */
 	@Autowired
 	GetTrainDelayResourceService getTrainDelayResourceService;
 
-	/**
-	 * コンストラクタ
-	 * 
-	 * @param lineProperties アプリ設定情報
-	 * @param lineMessagingClient LINE bot接続クライアント
-	 */
 	NoticeTrainDelayController(LineMessagingClient lineMessagingClient) {
 		this.lineMessagingClient = lineMessagingClient;
 	}
 
-	/**
-	 * JR東日本の電車遅延情報を通知する
-	 */
 	@Scheduled(cron = "0 5 8 * * *", zone = "Asia/Tokyo")
 	public void executeJrEast() {
 		StringBuilder sb = new StringBuilder(128);
