@@ -25,7 +25,7 @@ public class NoticeGarbageOutController {
 		this.lineMessagingClient = lineMessagingClient;
 	}
 
-	@Scheduled(cron = "0 0 21-23 1-7,15-21 * 4", zone = "Asia/Tokyo")
+	@Scheduled(cron = "0 20 21 1-7,15-21 * 4", zone = "Asia/Tokyo")
 	public void executeResourcesPrevious() {
 		try {
 			log.info("exec executeResourcesPrevious()");
