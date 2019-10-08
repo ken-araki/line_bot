@@ -1,7 +1,8 @@
 plugins {
-	id 'org.springframework.boot' version '2.1.6.RELEASE'
+	id 'org.springframework.boot' version '2.1.8.RELEASE'
 	id 'java'
 	id 'eclipse'
+	id "org.flywaydb.flyway" version "5.2.4"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -12,12 +13,17 @@ sourceCompatibility = '1.8'
 
 repositories {
 	mavenCentral()
+	jcenter()
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'com.linecorp.bot:line-bot-spring-boot:2.7.0'
 	implementation 'org.projectlombok:lombok:1.16.18'
-	
+	implementation 'org.flywaydb:flyway-core:5.2.4'
+	implementation 'org.postgresql:postgresql:42.2.8'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.1'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
