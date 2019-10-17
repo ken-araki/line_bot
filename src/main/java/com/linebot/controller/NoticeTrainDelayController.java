@@ -4,9 +4,8 @@ import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
@@ -20,18 +19,13 @@ import com.linecorp.bot.model.response.BotApiResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@AllArgsConstructor
 @Controller
 public class NoticeTrainDelayController {
-	private static final Logger log = LoggerFactory.getLogger(NoticeTrainDelayController.class);
 	private final String LINE_SEPARATOR = System.getProperty("line.separator");
-	private final LineMessagingClient lineMessagingClient;
 
-	@Autowired
-	GetTrainDelayResourceService getTrainDelayResourceService;
-
-	NoticeTrainDelayController(LineMessagingClient lineMessagingClient) {
-		this.lineMessagingClient = lineMessagingClient;
-	}
+	private LineMessagingClient lineMessagingClient;
+	private GetTrainDelayResourceService getTrainDelayResourceService;
 
 	@Scheduled(cron = "0 5 8 * * *", zone = "Asia/Tokyo")
 	public void executeJrEast() {

@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,18 +25,14 @@ import com.linecorp.bot.model.response.BotApiResponse;
 
 import lombok.NonNull;
 
+@Slf4j
+@AllArgsConstructor
 @Service
 public class ManageTobuyService {
-	private static final Logger log = LoggerFactory.getLogger(ManageTobuyService.class);
 	private final String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	private LineMessagingClient lineMessagingClient;
 	private TobuyMapper mapper;
-	
-	public ManageTobuyService(LineMessagingClient lineMessagingClient, TobuyMapper mapper) {
-		this.lineMessagingClient = lineMessagingClient;
-		this.mapper = mapper;
-	}
 
 	@Transactional
 	public void execute(String replyToken, Event event, TextMessageContent content) throws Exception {
