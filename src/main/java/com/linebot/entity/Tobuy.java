@@ -1,4 +1,4 @@
-package com.linebot.domain;
+package com.linebot.entity;
 
 import java.util.Date;
 

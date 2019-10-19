@@ -3,14 +3,12 @@ package com.linebot.service;
 import java.time.Duration;
 import java.util.stream.Stream;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
 
-import com.linebot.entry.TrainDelay;
+import com.linebot.model.TrainDelay;
 
 @Slf4j
 @Service

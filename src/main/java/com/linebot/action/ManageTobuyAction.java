@@ -1,4 +1,4 @@
-package com.linebot.service;
+package com.linebot.action;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -6,14 +6,11 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.linebot.domain.Tobuy;
+import com.linebot.entity.Tobuy;
 import com.linebot.mapper.TobuyMapper;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.ReplyMessage;
@@ -28,7 +25,7 @@ import lombok.NonNull;
 @Slf4j
 @AllArgsConstructor
 @Service
-public class ManageTobuyService {
+public class ManageTobuyAction {
 	private final String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	private LineMessagingClient lineMessagingClient;

@@ -1,4 +1,4 @@
-package com.linebot.entry;
+package com.linebot.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

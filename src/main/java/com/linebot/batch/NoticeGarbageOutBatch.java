@@ -1,4 +1,4 @@
-package com.linebot.controller;
+package com.linebot.batch;
 
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @AllArgsConstructor
 @Controller
-public class NoticeGarbageOutController {
+public class NoticeGarbageOutBatch {
 	private LineMessagingClient lineMessagingClient;
 
 	@Scheduled(cron = "0 20 21 1-7,15-21 * 4", zone = "Asia/Tokyo")

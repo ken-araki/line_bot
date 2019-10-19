@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.linebot.domain.Tobuy;
+import com.linebot.entity.Tobuy;
 
 @Mapper
 public interface TobuyMapper {

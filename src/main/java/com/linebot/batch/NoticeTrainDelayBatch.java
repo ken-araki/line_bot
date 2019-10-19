@@ -1,15 +1,14 @@
-package com.linebot.controller;
+package com.linebot.batch;
 
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
-import com.linebot.entry.TrainDelay;
+import com.linebot.model.TrainDelay;
 import com.linebot.service.GetTrainDelayResourceService;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.Broadcast;
@@ -21,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @AllArgsConstructor
 @Controller
-public class NoticeTrainDelayController {
+public class NoticeTrainDelayBatch {
 	private final String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	private LineMessagingClient lineMessagingClient;

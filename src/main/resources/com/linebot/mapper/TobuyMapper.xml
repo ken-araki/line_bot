@@ -3,7 +3,7 @@
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.linebot.mapper.TobuyMapper">
-	<insert id="insert" parameterType="com.linebot.domain.Tobuy">
+	<insert id="insert" parameterType="com.linebot.entity.Tobuy">
 		insert into tobuy (
 			goods,
 			is_completed,
@@ -26,7 +26,7 @@
 			is_completed = '0'
 	</update>
 
-	<select id="findByIsCompleted" resultType="com.linebot.domain.Tobuy">
+	<select id="findByIsCompleted" resultType="com.linebot.entity.Tobuy">
 		select
 			id,
 			goods,
