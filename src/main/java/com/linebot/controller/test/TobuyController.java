@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping(name = "/test/tobuy")
+@Profile("local")
 public class TobuyController {
     private ManageTobuyAction manageTobuyAction;
 
