@@ -12,7 +12,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping(name = "/test/tobuy")
+@RequestMapping(path = "/test/tobuy")
 @Profile("local")
 public class TobuyController {
     private ManageTobuyAction manageTobuyAction;
