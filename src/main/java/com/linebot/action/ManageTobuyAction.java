@@ -82,10 +82,12 @@ public class ManageTobuyAction {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	public List<Tobuy> findByIsCompleted(String isCompleted) {
 		return tobuyRepository.findByIsCompleted(isCompleted);
 	}
 
+	@Transactional
 	public int insertByGoods(String goods) {
 		Tobuy t = new Tobuy();
 		t.setGoods(goods);
@@ -94,7 +96,8 @@ public class ManageTobuyAction {
 		return 1;
 	}
 
-	public void updateAllCompleted() {
-		tobuyRepository.updateAllCompleted();
+	@Transactional
+	public int updateAllCompleted() {
+		return tobuyRepository.updateAllCompleted();
 	}
 }

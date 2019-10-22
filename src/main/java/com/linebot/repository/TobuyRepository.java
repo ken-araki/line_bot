@@ -17,5 +17,5 @@ public interface TobuyRepository extends JpaRepository<Tobuy, Long> {
             value = "update tobuy set is_completed = '1', updated_date = current_timestamp where is_completed = '0';",
             nativeQuery = true
     )
-    void updateAllCompleted();
+    int updateAllCompleted();
 }
