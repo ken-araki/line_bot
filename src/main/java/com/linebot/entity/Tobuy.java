@@ -1,20 +1,28 @@
 package com.linebot.entity;
 
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+import javax.persistence.*;
+import java.util.Date;
+
 @Data
+@Entity
+@Table(name = "tobuy")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Tobuy {
+	@Id
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
+	@Column(name = "id")
 	private String id;
+	@Column(name = "goods")
 	private String goods;
+	@Column(name = "is_completed")
 	private String isCompleted;
+	@Column(name = "created_date")
 	private Date createdDate;
+	@Column(name = "updated_date")
 	private Date updatedDate;
 }

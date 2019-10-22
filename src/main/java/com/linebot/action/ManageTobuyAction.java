@@ -1,17 +1,7 @@
 package com.linebot.action;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.linebot.entity.Tobuy;
-import com.linebot.mapper.TobuyMapper;
+import com.linebot.repository.TobuyRepository;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.Event;
@@ -19,8 +9,16 @@ import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.response.BotApiResponse;
-
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @AllArgsConstructor
@@ -29,7 +27,7 @@ public class ManageTobuyAction {
 	private final String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	private LineMessagingClient lineMessagingClient;
-	private TobuyMapper mapper;
+	private TobuyRepository tobuyRepository;
 
 	@Transactional
 	public void execute(String replyToken, Event event, TextMessageContent content) throws Exception {
@@ -59,8 +57,8 @@ public class ManageTobuyAction {
 			);
 			break;
 		case "買い物リスト購入":
-			int resultUpdate = this.updateAllCompleted();
-			String messageUpdate = String.format("登録されていた %d 件の商品を購入しました", resultUpdate);
+			this.updateAllCompleted();
+			String messageUpdate = "登録されていた商品を購入しました";
 			this.reply(
 					replyToken,
 					Collections.singletonList(new TextMessage(messageUpdate))
@@ -85,17 +83,18 @@ public class ManageTobuyAction {
 	}
 
 	public List<Tobuy> findByIsCompleted(String isCompleted) {
-		return mapper.findByIsCompleted(isCompleted);
+		return tobuyRepository.findByIsCompleted(isCompleted);
 	}
 
 	public int insertByGoods(String goods) {
 		Tobuy t = new Tobuy();
 		t.setGoods(goods);
 		t.setIsCompleted("0");
-		return mapper.insert(t);
+		tobuyRepository.save(t);
+		return 1;
 	}
 
-	public int updateAllCompleted() {
-		return mapper.updateAllCompleted();
+	public void updateAllCompleted() {
+		tobuyRepository.updateAllCompleted();
 	}
 }
