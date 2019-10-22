@@ -3,6 +3,7 @@ package com.linebot.batch;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
+import com.linebot.util.Utils;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,14 +24,11 @@ public class NoticeGarbageOutBatch {
 
 	@Scheduled(cron = "0 20 21 1-7,15-21 * 4", zone = "Asia/Tokyo")
 	public void executeResourcesPrevious() {
-		try {
-			log.info("exec executeResourcesPrevious()");
-			final BotApiResponse response = lineMessagingClient.broadcast(
-					new Broadcast(Collections.singletonList(new TextMessage("明日は資源ごみの日です。")), false)
-			).get();
-			log.info("Sent messages: {}", response);
-		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(e);
-		}
+		log.info("exec executeResourcesPrevious()");
+		final BotApiResponse response = Utils.uncheck(() -> {
+			return lineMessagingClient.broadcast(new Broadcast(Collections.singletonList(
+					new TextMessage("明日は資源ごみの日です。")), false)).get();
+		});
+		log.info("Sent messages: {}", response);
 	}
 }
