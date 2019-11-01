@@ -1,11 +1,14 @@
 package com.linebot.controller.test;
 
-import com.linebot.action.ManageTobuyAction;
 import com.linebot.entity.Tobuy;
+import com.linebot.service.TobuyService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -15,23 +18,30 @@ import java.util.List;
 @RequestMapping(path = "/test/tobuy")
 @Profile("local")
 public class TobuyController {
-    private ManageTobuyAction manageTobuyAction;
+    private TobuyService tobuyService;
 
     @GetMapping(path = "/insert")
     public int insert(
             @RequestParam(name = "goods", required = false, defaultValue = "test") String goods
     ) {
-        manageTobuyAction.insertByGoods(goods);
-        return 1;
+        return tobuyService.insertByGoods(goods);
     }
 
     @GetMapping(path = "/find")
     public List<Tobuy> find() {
-        return manageTobuyAction.findByIsCompleted("0");
+        return tobuyService.findByIsCompleted("0");
     }
 
     @GetMapping(path = "/update")
     public int update() {
-        return manageTobuyAction.updateAllCompleted();
+        List<Tobuy> tobuys = tobuyService.findByIsCompleted("0");
+        if (tobuys.isEmpty()) {
+            return 0;
+        } else if (tobuys.size() == 1) {
+            Tobuy t = tobuys.get(0);
+            return tobuyService.updateCompleted(t);
+        } else {
+            return tobuyService.updateCompleted(tobuys);
+        }
     }
 }

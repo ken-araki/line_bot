@@ -16,7 +16,7 @@ public class Tobuy {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column(name = "id")
-	private String id;
+	private Integer id;
 	@Column(name = "goods")
 	private String goods;
 	@Column(name = "is_completed")
