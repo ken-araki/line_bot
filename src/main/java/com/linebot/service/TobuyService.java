@@ -16,12 +16,14 @@ import java.util.List;
 public class TobuyService {
     private TobuyRepository tobuyRepository;
 
-    @Transactional(readOnly = true)
     public List<Tobuy> findByIsCompleted(String isCompleted) {
         return tobuyRepository.findByIsCompleted(isCompleted);
     }
 
-    @Transactional
+    public Tobuy findByIdAndGoods(Integer id, String goods) {
+        return tobuyRepository.findByIdAndGoodsAndIsCompleted(id, goods, "0");
+    }
+
     public int insertByGoods(String goods) {
         Tobuy t = new Tobuy();
         t.setGoods(goods);
@@ -32,7 +34,6 @@ public class TobuyService {
         return 1;
     }
 
-    @Transactional
     public int updateCompleted(Tobuy tobuy) {
         tobuy.setIsCompleted("1");
         tobuy.setUpdatedDate(Utils.now());
@@ -40,7 +41,6 @@ public class TobuyService {
         return 1;
     }
 
-    @Transactional
     public int updateCompleted(List<Tobuy> tobuys) {
         return tobuys.stream().mapToInt(tobuy -> {
             tobuy.setIsCompleted("1");

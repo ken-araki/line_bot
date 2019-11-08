@@ -1,13 +1,18 @@
 package com.linebot.action;
 
-import com.linebot.util.Utils;
+import com.linebot.message.FlexMessageBuilder;
+import com.linebot.model.UserStatus;
+import com.linebot.service.UserStatusCacheService;
 import com.linecorp.bot.model.message.Message;
+import com.linecorp.bot.model.message.TextMessage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -15,29 +20,64 @@ import java.util.List;
 @Component
 public class ActionHandler {
     private ApplicationContext applicationContext;
+    private UserStatusCacheService userStatusCacheService;
+    private FlexMessageBuilder flexMessageBuilder;
 
+    @NotNull
     public List<Message> handle(@NotNull String userId, @NotNull String message) {
-        String operation = message.split(Utils.LINE_SEPARATOR)[0];
-        Action target = this.getAction(operation);
-        return target.execute(userId, message);
-    }
-
-    public Action getAction(String operation) {
-        for (ActionMapping mapping : ActionMapping.values()) {
-            if (mapping.operation.equals(operation)) {
-                return (Action)applicationContext.getBean(mapping.executor);
-            }
+        ActionSelector actionSelector = ActionSelector.getByStartWord(message);
+        if (actionSelector != null) {
+            return executeStartAction(actionSelector, userId, message);
         }
-        log.error("Nothing Aciton with operation. [{}]", operation);
-        throw new IllegalArgumentException("Nothing Aciton");
-    }
-    @AllArgsConstructor
-    public enum ActionMapping {
-        TOBUY_CONFIRM("買い物リスト確認", "TobuyConfirmAction"),
-        TOBUY_ADD("買い物リスト追加", "TobuyAddAction"),
-        TOBUY_COMPLATE("買い物リスト購入", "TobuyComplateAction");
 
-        private String operation;
-        private String executor;
+        UserStatus status = this.getStatus(userId);
+        if (status.getNextAction() == null) {
+            log.error("userId: {}, message: {}, status: {}", userId, message, status);
+            throw new RuntimeException("no match start word, and no cache.");
+        }
+
+        Action action = getAction(status.getNextAction());
+        if (action.check(message)) {
+            List<Message> result = action.execute(userId, message);
+            userStatusCacheService.set(userId, createUserStatus(userId, action.getNextAction()));
+            return result;
+        } else {
+            userStatusCacheService.delete(userId);
+            return Arrays.asList(
+                    new TextMessage("このメッセージは受け付けられません。どの操作を実行するか選択してください"),
+                    flexMessageBuilder.buildStartWordMessage()
+            );
+        }
+    }
+
+    private List<Message> executeStartAction(ActionSelector actionSelector, String userId, String message) {
+        Action action = getStartAction(actionSelector);
+        // スタートワードなのでチェック不要でexecute実行する
+        List<Message> result = action.execute(userId, message);
+        userStatusCacheService.set(userId, createUserStatus(userId, action.getNextAction()));
+        return result;
+    }
+
+    private Action getStartAction(ActionSelector actionSelector) {
+        String actionName = actionSelector.getActionList().stream()
+                .findFirst()
+                .get();
+        return getAction(actionName);
+    }
+
+    private Action getAction(String actionName) {
+        return (Action) applicationContext.getBean(actionName);
+    }
+
+    private UserStatus getStatus(String userId) {
+        UserStatus u = userStatusCacheService.get(userId);
+        return u != null ? u : new UserStatus();
+    }
+
+    private UserStatus createUserStatus(@NotNull String userId, @Nullable String nextAction) {
+        UserStatus u = new UserStatus();
+        u.setUserId(userId);
+        u.setNextAction(nextAction);
+        return u;
     }
 }

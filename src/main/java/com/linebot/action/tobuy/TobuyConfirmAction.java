@@ -17,9 +17,10 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @Component
-public class TobuyConfirmAction implements Action {
+public class TobuyConfirmAction extends Action {
     private TobuyService tobuyService;
 
+    @NotNull
     @Override
     public List<Message> execute(@NotNull String userId, @NotNull String message) {
         log.info("tobuy/confirm/{}/", userId);

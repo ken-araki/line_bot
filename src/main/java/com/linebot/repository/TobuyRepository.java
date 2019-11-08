@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface TobuyRepository extends JpaRepository<Tobuy, Long> {
     List<Tobuy> findByIsCompleted(String isCompleted);
+    Tobuy findByIdAndGoodsAndIsCompleted(Integer id, String goods, String isCompleted);
 
     @Modifying
     @Query(

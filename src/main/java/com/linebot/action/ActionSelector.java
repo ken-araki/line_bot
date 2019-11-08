@@ -1,0 +1,32 @@
+package com.linebot.action;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.List;
+
+@AllArgsConstructor
+public enum ActionSelector {
+    TOBUY_ADD("買い物リスト追加", Arrays.asList("tobuyAddInputAction", "tobuyAddAction")),
+    TOBUY_CONFIRM("買い物リスト確認", Arrays.asList("tobuyConfirmAction")),
+    TOBUY_COMPLATE("買い物リスト購入", Arrays.asList("tobuyComplateInputAction", "tobuyAddAction"));
+
+    @Getter
+    private String startWord;
+    @Getter
+    private List<String> actionList;
+
+    @Nullable
+    public static ActionSelector getByStartWord(@NotNull String message) {
+        for (ActionSelector action : values()) {
+            if (action.getStartWord().equals(message)) {
+                return action;
+            }
+        }
+        return null;
+    }
+
+}
