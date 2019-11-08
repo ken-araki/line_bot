@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.function.BiFunction;
 
@@ -31,7 +32,7 @@ public class NoticeGarbageOutService {
     }
 
     public boolean checkDay(int add, BiFunction<Integer, DayOfWeek, Boolean> fn) {
-        LocalDateTime target = LocalDateTime.now().plusDays(add);
+        LocalDateTime target = LocalDateTime.now(ZoneId.of("Asia/Tokyo")).plusDays(add);
         DayOfWeek dayOfWeek = target.getDayOfWeek();
         int day = target.getDayOfMonth();
         return (Boolean) fn.apply(day, dayOfWeek);
