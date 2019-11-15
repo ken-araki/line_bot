@@ -29,6 +29,9 @@ public class TobuyComplateInputAction extends Action {
     @Override
     public List<Message> execute(@NotNull String userId, @NotNull String message) {
         List<Tobuy> tobuyList = tobuyService.findByIsCompleted("0");
+        if (tobuyList.isEmpty()) {
+            return Arrays.asList(new TextMessage("買い物リストはありません"));
+        }
         List<MessageAction> list = Lists.newArrayList();
         tobuyList.stream()
                 .forEach(t -> list.add(

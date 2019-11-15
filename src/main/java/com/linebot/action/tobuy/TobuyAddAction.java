@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -27,6 +28,7 @@ public class TobuyAddAction extends Action {
     public List<Message> execute(@NotNull String userId, @NotNull String message) {
         String[] lines = message.split(Utils.LINE_SEPARATOR);
         int resultInsert = Arrays.stream(lines)
+                .filter(l -> !StringUtils.isEmpty(l))
                 .mapToInt(tobuyService::insertByGoods)
                 .sum();
 

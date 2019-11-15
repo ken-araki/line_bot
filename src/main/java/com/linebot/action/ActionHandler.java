@@ -32,8 +32,10 @@ public class ActionHandler {
 
         UserStatus status = this.getStatus(userId);
         if (status.getNextAction() == null) {
-            log.error("userId: {}, message: {}, status: {}", userId, message, status);
-            throw new RuntimeException("no match start word, and no cache.");
+            return Arrays.asList(
+                    new TextMessage("このメッセージは受け付けられません。どの操作を実行するか選択してください"),
+                    flexMessageBuilder.buildStartWordMessage()
+            );
         }
 
         Action action = getAction(status.getNextAction());
