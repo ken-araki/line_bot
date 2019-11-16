@@ -1,10 +1,7 @@
 package com.linebot.service.notice;
 
-import com.linebot.util.Utils;
-import com.linecorp.bot.client.LineMessagingClient;
-import com.linecorp.bot.model.Broadcast;
+import com.linebot.service.message.PushMessageService;
 import com.linecorp.bot.model.message.TextMessage;
-import com.linecorp.bot.model.response.BotApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,16 +16,13 @@ import java.util.function.BiFunction;
 @AllArgsConstructor
 @Service
 public class NoticeGarbageOutService {
-    private LineMessagingClient lineMessagingClient;
+    private PushMessageService pushMessageService;
 
     public void executeDayBefore() {
         if (this.isTommorowFirstOrThirdFriday()) {
             return;
         }
-        final BotApiResponse response = Utils.uncheck(() -> {
-            return lineMessagingClient.broadcast(new Broadcast(Collections.singletonList(
-                    new TextMessage("明日は資源ごみの日です。")), false)).get();
-        });
+        pushMessageService.broadcast(Collections.singletonList(new TextMessage("明日は資源ごみの日です。")));
     }
 
     public boolean checkDay(int add, BiFunction<Integer, DayOfWeek, Boolean> fn) {
