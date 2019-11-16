@@ -1,6 +1,6 @@
 package com.linebot.batch;
 
-import com.linebot.service.NoticeGarbageOutService;
+import com.linebot.service.notice.NoticeGarbageOutService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

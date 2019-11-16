@@ -1,7 +1,7 @@
 package com.linebot.batch;
 
 import com.linebot.model.TrainDelay;
-import com.linebot.service.GetTrainDelayResourceService;
+import com.linebot.service.notice.GetTrainDelayResourceService;
 import com.linebot.util.Utils;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.Broadcast;
@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
 import java.util.Collections;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
 @Slf4j

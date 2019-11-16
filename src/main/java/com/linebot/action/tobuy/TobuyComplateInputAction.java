@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.linebot.action.Action;
 import com.linebot.entity.Tobuy;
 import com.linebot.message.FlexMessageBuilder;
-import com.linebot.service.TobuyService;
+import com.linebot.service.tobuy.TobuyService;
 import com.linecorp.bot.model.action.MessageAction;
 import com.linecorp.bot.model.message.FlexMessage;
 import com.linecorp.bot.model.message.Message;

@@ -1,4 +1,4 @@
-package com.linebot.service;
+package com.linebot.service.notice;
 
 import com.linebot.util.Utils;
 import com.linecorp.bot.client.LineMessagingClient;

@@ -1,4 +1,4 @@
-package com.linebot.service;
+package com.linebot.service.tobuy;
 
 import com.linebot.entity.Tobuy;
 import com.linebot.repository.TobuyRepository;

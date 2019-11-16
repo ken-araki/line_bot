@@ -1,4 +1,4 @@
-package com.linebot.service;
+package com.linebot.service.notice;
 
 import java.time.Duration;
 import java.util.stream.Stream;
