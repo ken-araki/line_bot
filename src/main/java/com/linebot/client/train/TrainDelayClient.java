@@ -14,6 +14,13 @@ import java.util.List;
 public class TrainDelayClient {
     private WebClient webClient;
 
+    /**
+     * 鉄道comのRSSを集計して遅延している電車を返すAPIを実行する。
+     * 電車遅延情報を取得する。
+     * 参照URL: https://rti-giken.jp/fhc/api/train_tetsudo/
+     *
+     * @return 電車遅延情報リスト
+     */
     public List<TrainDelay> getDelay() {
         return webClient.get("https://tetsudo.rti-giken.jp/free/delay.json");
     }
