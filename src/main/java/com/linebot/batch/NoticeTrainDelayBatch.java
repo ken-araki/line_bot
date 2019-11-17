@@ -1,6 +1,6 @@
 package com.linebot.batch;
 
-import com.linebot.model.TrainDelay;
+import com.linebot.model.train.TrainDelay;
 import com.linebot.service.message.PushMessageService;
 import com.linebot.service.notice.GetTrainDelayResourceService;
 import com.linebot.util.Utils;
