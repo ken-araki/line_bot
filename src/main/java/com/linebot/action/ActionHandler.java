@@ -3,6 +3,7 @@ package com.linebot.action;
 import com.linebot.message.FlexMessageBuilder;
 import com.linebot.model.UserStatus;
 import com.linebot.service.UserStatusCacheService;
+import com.linebot.service.user.BotUserService;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,16 @@ import java.util.List;
 public class ActionHandler {
     private ApplicationContext applicationContext;
     private UserStatusCacheService userStatusCacheService;
+    private BotUserService botUserService;
     private FlexMessageBuilder flexMessageBuilder;
+
+    public List<Message> follow(@NotNull String userId) {
+        botUserService.insert(userId);
+        return Arrays.asList(
+                new TextMessage("ユーザ登録を行いました。以下操作が実行可能です。"),
+                flexMessageBuilder.buildStartWordMessage()
+        );
+    }
 
     @NotNull
     public List<Message> handle(@NotNull String userId, @NotNull String message) {
