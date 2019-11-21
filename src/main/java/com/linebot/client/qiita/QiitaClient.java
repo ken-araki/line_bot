@@ -1,6 +1,8 @@
 package com.linebot.client.qiita;
 
+import com.linebot.client.UriBuilder;
 import com.linebot.client.WebClient;
+import com.linebot.model.common.RequestParameter;
 import com.linebot.model.qiita.Item;
 import com.linebot.model.qiita.Stocker;
 import lombok.AllArgsConstructor;
@@ -16,10 +18,13 @@ import java.util.List;
 public class QiitaClient {
     private WebClient webClient;
 
-    public List<Item> getUserItem(String userId) {
-        return Arrays.asList(webClient.get("https://qiita.com/api/v2/users/" + userId + "/items?page=1&per_page=100", Item[].class));
+    public List<Item> getUserItem(String userId, RequestParameter p) {
+        String url = UriBuilder.QIITA_USER_ITEMS.build(p, userId);
+        return Arrays.asList(webClient.get(url, Item[].class));
     }
-    public List<Stocker> getItemStocker(String itemId) {
-        return Arrays.asList(webClient.get("https://qiita.com/api/v2/items/" + itemId + "/stockers?page=1&per_page=100", Stocker[].class));
+
+    public List<Stocker> getItemStocker(String itemId, RequestParameter p) {
+        String url = UriBuilder.QIITA_ITEM_STOCK.build(p, itemId);
+        return Arrays.asList(webClient.get(url, Stocker[].class));
     }
 }

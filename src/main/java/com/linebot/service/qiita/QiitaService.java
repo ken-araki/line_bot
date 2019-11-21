@@ -1,6 +1,7 @@
 package com.linebot.service.qiita;
 
 import com.linebot.client.qiita.QiitaClient;
+import com.linebot.model.common.RequestParameter;
 import com.linebot.model.qiita.ItemSummary;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +17,10 @@ import java.util.stream.Collectors;
 public class QiitaService {
     private QiitaClient qiitaClient;
 
-    public List<ItemSummary> getItemByUserId(String userId) {
-        return qiitaClient.getUserItem(userId).stream()
+    public List<ItemSummary> getItemByUserId(String userId, RequestParameter p) {
+        return qiitaClient.getUserItem(userId, p).stream()
                 .map(i -> {
-                    int stock = qiitaClient.getItemStocker(i.getId()).size();
+                    int stock = qiitaClient.getItemStocker(i.getId(), p).size();
                     return ItemSummary.builder()
                             .id(i.getId())
                             .title(i.getTitle())

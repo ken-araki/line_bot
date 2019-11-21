@@ -1,5 +1,6 @@
 package com.linebot.client.train;
 
+import com.linebot.client.UriBuilder;
 import com.linebot.client.WebClient;
 import com.linebot.model.train.TrainDelay;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class TrainDelayClient {
      * @return 電車遅延情報リスト
      */
     public List<TrainDelay> getDelay() {
-        return Arrays.asList(webClient.get("https://tetsudo.rti-giken.jp/free/delay.json", TrainDelay[].class));
+        String url = UriBuilder.TRAIN_DELAY.build();
+        return Arrays.asList(webClient.get(url, TrainDelay[].class));
     }
 }

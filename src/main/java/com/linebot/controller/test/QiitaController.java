@@ -3,6 +3,7 @@ package com.linebot.controller.test;
 import com.linebot.client.qiita.QiitaClient;
 import com.linebot.model.qiita.Item;
 import com.linebot.model.qiita.ItemSummary;
+import com.linebot.model.qiita.QiitaRequestParameter;
 import com.linebot.service.qiita.QiitaService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +25,18 @@ public class QiitaController {
 
     @GetMapping("/items")
     public List<Item> get() {
-        return client.getUserItem("kaad");
+        QiitaRequestParameter p = QiitaRequestParameter.builder()
+                .page(1)
+                .perPage(100)
+                .build();
+        return client.getUserItem("kaad", p);
     }
     @GetMapping("/itemSummary")
     public List<ItemSummary> getItemSummary() {
-        return qiitaService.getItemByUserId("kaad");
+        QiitaRequestParameter p = QiitaRequestParameter.builder()
+                .page(1)
+                .perPage(100)
+                .build();
+        return qiitaService.getItemByUserId("kaad", p);
     }
 }
