@@ -20,14 +20,14 @@ public class QiitaService {
         return qiitaClient.getUserItem(userId).stream()
                 .map(i -> {
                     int stock = qiitaClient.getItemStocker(i.getId()).size();
-                    ItemSummary itemSummary = new ItemSummary();
-                    itemSummary.setId(i.getId());
-                    itemSummary.setTitle(i.getTitle());
-                    itemSummary.setUrl(i.getUrl());
-                    itemSummary.setLikesCount(i.getLikesCount());
-                    itemSummary.setPageViewsCount(i.getPageViewsCount());
-                    itemSummary.setStockersCount(stock);
-                    return itemSummary;
+                    return ItemSummary.builder()
+                            .id(i.getId())
+                            .title(i.getTitle())
+                            .url(i.getUrl())
+                            .likesCount(i.getLikesCount())
+                            .stockersCount(stock)
+                            .pageViewsCount(i.getPageViewsCount())
+                            .build();
                 }).sorted(Comparator
                         .comparing(ItemSummary::getLikesCount, Comparator.reverseOrder())
                         .thenComparing(ItemSummary::getStockersCount, Comparator.reverseOrder()))
