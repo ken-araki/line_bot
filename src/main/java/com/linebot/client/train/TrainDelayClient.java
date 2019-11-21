@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -22,6 +23,6 @@ public class TrainDelayClient {
      * @return 電車遅延情報リスト
      */
     public List<TrainDelay> getDelay() {
-        return webClient.get("https://tetsudo.rti-giken.jp/free/delay.json");
+        return Arrays.asList(webClient.get("https://tetsudo.rti-giken.jp/free/delay.json", TrainDelay[].class));
     }
 }

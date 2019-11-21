@@ -3,7 +3,6 @@ package com.linebot.client;
 import com.linebot.util.Utils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +24,6 @@ public class WebClient {
 
     public <V, P> V get(String uri, Class<V> resultClazz) {
         return this.exchange(this.getRequestEntity(uri), resultClazz);
-    }
-
-    /**
-     * {@link WebClient#get(String, Class)} と同様。
-     * ただし、以下のようなJson変換できないレスポンスの場合はこちらを使用する
-     * [{XXX}, {YYY}, {ZZZ}]
-     *
-     * ※ {}で囲まれておらず、[]で始まっているパターンなど
-     */
-    public <V, P> V get(String uri) {
-        return this.exchange(this.getRequestEntity(uri));
     }
 
     public RequestEntity getRequestEntity(String uri) {
@@ -67,6 +55,10 @@ public class WebClient {
         }
     }
 
+    /*
+    基本的にCollectionでデータを取得する時はこちらを利用したいが、
+    これを利用するとLinkedHashMapのListになってしまう。
+    うまいこと解消できなかったので、これは利用せず配列をListへ変換するように各Clientで実装する
     public <V> V exchange(RequestEntity requestEntity) {
         try {
             ResponseEntity<V> responseEntity = restTemplate.exchange(requestEntity, new ParameterizedTypeReference<V>() {
@@ -82,4 +74,5 @@ public class WebClient {
             throw new RuntimeException(e);
         }
     }
+    */
 }
