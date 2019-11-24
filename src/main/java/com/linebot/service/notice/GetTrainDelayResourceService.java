@@ -5,6 +5,7 @@ import com.linebot.model.train.TrainDelay;
 import com.linebot.service.message.PushMessageService;
 import com.linebot.util.Utils;
 import com.linecorp.bot.model.message.TextMessage;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
+@AllArgsConstructor
 @Service
 public class GetTrainDelayResourceService {
     private PushMessageService pushMessageService;
