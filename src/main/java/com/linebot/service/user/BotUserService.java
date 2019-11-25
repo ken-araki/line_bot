@@ -30,4 +30,14 @@ public class BotUserService {
         u.setCreatedDate(Utils.now());
         return botUserRepository.save(u);
     }
+
+    @Transactional
+    public BotUser delete(@NotNull String userId) {
+        BotUser user = botUserRepository.findByUserId(userId);
+        if (user == null) {
+            return null;
+        }
+        user.setDeleted("1");
+        return botUserRepository.save(user);
+    }
 }

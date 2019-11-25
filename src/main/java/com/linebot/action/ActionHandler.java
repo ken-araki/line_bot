@@ -3,6 +3,7 @@ package com.linebot.action;
 import com.linebot.message.FlexMessageBuilder;
 import com.linebot.model.UserStatus;
 import com.linebot.service.UserStatusCacheService;
+import com.linebot.service.user.BotUserQiitaService;
 import com.linebot.service.user.BotUserService;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
@@ -10,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -23,6 +25,7 @@ public class ActionHandler {
     private ApplicationContext applicationContext;
     private UserStatusCacheService userStatusCacheService;
     private BotUserService botUserService;
+    private BotUserQiitaService botUserQiitaService;
     private FlexMessageBuilder flexMessageBuilder;
 
     public List<Message> follow(@NotNull String userId) {
@@ -31,6 +34,12 @@ public class ActionHandler {
                 new TextMessage("ユーザ登録を行いました。以下操作が実行可能です。"),
                 flexMessageBuilder.buildStartWordMessage()
         );
+    }
+
+    @Transactional
+    public void unfollow(@NotNull String userId) {
+        botUserService.delete(userId);
+        botUserQiitaService.delete(userId);
     }
 
     @NotNull

@@ -36,8 +36,19 @@ public class BotUserQiitaService {
             );
         } else {
             user.setQiitaUserId(qiitaId);
-            user.setCreatedDate(Utils.now());
+            user.setDeleted("0");
             return botUserQiitaRepository.save(user);
         }
+    }
+
+    @NotNull
+    @Transactional
+    public BotUserQiita delete(@NotNull String userId) {
+        BotUserQiita user = findByUserId(userId);
+        if (user == null || StringUtils.isEmpty(user.getQiitaUserId())) {
+            return null;
+        }
+        user.setDeleted("1");
+        return botUserQiitaRepository.save(user);
     }
 }

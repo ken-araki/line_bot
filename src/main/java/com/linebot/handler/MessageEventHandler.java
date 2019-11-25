@@ -3,6 +3,7 @@ package com.linebot.handler;
 import com.linebot.action.ActionHandler;
 import com.linecorp.bot.model.event.FollowEvent;
 import com.linecorp.bot.model.event.MessageEvent;
+import com.linecorp.bot.model.event.UnfollowEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
@@ -35,5 +36,12 @@ public class MessageEventHandler {
 
         log.info("follow. userId: {}", userId);
         return handler.follow(userId);
+    }
+    @EventMapping
+    public void handleUnfollowEvent(UnfollowEvent event) {
+        String userId = event.getSource().getUserId();
+
+        log.info("unfollowed this bot: {}", userId);
+        handler.unfollow(userId);
     }
 }

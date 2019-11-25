@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface BotUserRepository extends JpaRepository<BotUser, Long> {
-    // 将来、削除処理も実装するため、今は全件だけどアクティブユーザのみ取得する
     List<BotUser> findByDeleted(String deleted);
+    BotUser findByUserId(String userId);
 }
