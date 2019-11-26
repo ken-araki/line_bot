@@ -1,5 +1,6 @@
 package com.linebot.action;
 
+import com.linebot.entity.BotUser;
 import com.linebot.message.FlexMessageBuilder;
 import com.linebot.model.UserStatus;
 import com.linebot.service.UserStatusCacheService;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -29,6 +31,16 @@ public class ActionHandler {
     private FlexMessageBuilder flexMessageBuilder;
 
     public List<Message> follow(@NotNull String userId) {
+        // フリープランの場合、メッセージは月1,000通となっているため、
+        // 機能を提供するユーザは30とする。
+        // 何かいい方法を見つけたなら消す
+        List<BotUser> users = botUserService.findActiveUser();
+        if (users.size() >= 30) {
+            return Collections.singletonList(
+                    new TextMessage("ユーザ登録数が上限に達しています。利用可能までしばしお待ちください。")
+            );
+        }
+        // ここまで
         botUserService.insert(userId);
         return Arrays.asList(
                 new TextMessage("ユーザ登録を行いました。以下操作が実行可能です。"),
@@ -42,8 +54,16 @@ public class ActionHandler {
         botUserQiitaService.delete(userId);
     }
 
-    @NotNull
+    @Nullable
     public List<Message> handle(@NotNull String userId, @NotNull String message) {
+        // ここの部分もユーザ上限によるもの
+        // メッセージを無駄打ちしないように、Nullを返す
+        // ここを消したなら@Nullable -> @NotNull へ戻す
+        BotUser user = botUserService.findActiveUserByUserId(userId);
+        if (user == null || !"0".equals(user.getDeleted())) {
+            return null;
+        }
+        // ここまで
         ActionSelector actionSelector = ActionSelector.getByStartWord(message);
         if (actionSelector != null) {
             return executeStartAction(actionSelector, userId, message);

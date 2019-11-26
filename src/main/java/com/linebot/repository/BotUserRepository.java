@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface BotUserRepository extends JpaRepository<BotUser, Long> {
     List<BotUser> findByDeleted(String deleted);
+    BotUser findByUserIdAndDeleted(String userId, String deleted);
     BotUser findByUserId(String userId);
 }

@@ -22,6 +22,11 @@ public class BotUserService {
         return botUserRepository.findByDeleted("0");
     }
 
+    @Transactional(readOnly = true)
+    public BotUser findActiveUserByUserId(String userId) {
+        return botUserRepository.findByUserIdAndDeleted(userId, "0");
+    }
+
     @Transactional
     public BotUser insert(@NotNull String userId) {
         BotUser u = new BotUser();
