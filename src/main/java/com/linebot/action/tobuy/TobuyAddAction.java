@@ -29,7 +29,7 @@ public class TobuyAddAction extends Action {
         String[] lines = message.split(Utils.LINE_SEPARATOR);
         int resultInsert = Arrays.stream(lines)
                 .filter(l -> !StringUtils.isEmpty(l))
-                .mapToInt(tobuyService::insertByGoods)
+                .mapToInt(l -> tobuyService.insertByGoods(userId, l))
                 .sum();
 
         String messageInsert = String.format("%d 件の買い物リストを登録しました.", resultInsert);

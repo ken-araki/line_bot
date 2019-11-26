@@ -25,4 +25,8 @@ public class Tobuy {
 	private Date createdDate;
 	@Column(name = "updated_date")
 	private Date updatedDate;
+
+	// postgres は列追加の場所を指定できない
+	@Column(name = "user_id")
+	private String userId;
 }

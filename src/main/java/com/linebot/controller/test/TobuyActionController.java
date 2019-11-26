@@ -44,7 +44,7 @@ public class TobuyActionController {
 
     @GetMapping(path = "/tobuy/confirm")
     public List<Message> confirm() {
-        return action.handle("01", "買い物リスト確認");
+        return action.handle("1", "買い物リスト確認");
     }
 
     @GetMapping(path = "/tobuy/complate")

@@ -17,22 +17,23 @@ public class TobuyService {
     private TobuyRepository tobuyRepository;
 
     @Transactional(readOnly = true)
-    public List<Tobuy> findByIsCompleted(String isCompleted) {
-        return tobuyRepository.findByIsCompleted(isCompleted);
+    public List<Tobuy> findByIsCompleted(String userId, String isCompleted) {
+        return tobuyRepository.findByUserIdAndIsCompleted(userId, isCompleted);
     }
 
     @Transactional(readOnly = true)
-    public Tobuy findByIdAndGoods(Integer id, String goods) {
-        return tobuyRepository.findByIdAndGoodsAndIsCompleted(id, goods, "0");
+    public Tobuy findByIdAndGoods(Integer id, String userId, String goods) {
+        return tobuyRepository.findByIdAndUserIdAndGoodsAndIsCompleted(id, userId, goods, "0");
     }
 
     @Transactional
-    public int insertByGoods(String goods) {
+    public int insertByGoods(String userId, String goods) {
         Tobuy t = new Tobuy();
         t.setGoods(goods);
         t.setIsCompleted("0");
         t.setCreatedDate(Utils.now());
         t.setUpdatedDate(Utils.now());
+        t.setUserId(userId);
         tobuyRepository.save(t);
         return 1;
     }

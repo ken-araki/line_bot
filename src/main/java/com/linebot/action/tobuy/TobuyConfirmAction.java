@@ -24,7 +24,7 @@ public class TobuyConfirmAction extends Action {
     @Override
     public List<Message> execute(@NotNull String userId, @NotNull String message) {
         log.info("tobuy/confirm/{}/", userId);
-        List<Tobuy> tobuyList = tobuyService.findByIsCompleted("0");
+        List<Tobuy> tobuyList = tobuyService.findByIsCompleted(userId, "0");
         StringBuilder sb = new StringBuilder("買い物リストはこちらです");
         tobuyList.stream().forEach(t -> sb.append(Utils.LINE_SEPARATOR + t.getGoods()));
         return Arrays.asList(new TextMessage(sb.toString()));

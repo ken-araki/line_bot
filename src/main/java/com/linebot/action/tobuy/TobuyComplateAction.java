@@ -29,7 +29,7 @@ public class TobuyComplateAction extends Action {
         int id = Integer.parseInt(m[0]);
         String goods = m[1];
 
-        Optional<Tobuy> tobuyOpt = Optional.ofNullable(tobuyService.findByIdAndGoods(id, goods));
+        Optional<Tobuy> tobuyOpt = Optional.ofNullable(tobuyService.findByIdAndGoods(id, userId, goods));
         if (tobuyOpt.isPresent()) {
             tobuyService.updateCompleted(tobuyOpt.get());
             String result = String.format("%sを購入しました", goods);
