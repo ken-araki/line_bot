@@ -6,7 +6,7 @@
 image: openjdk:8
 
 pipelines:
-  default:
+  develop:
     - step:
         caches:
           - gradle
@@ -14,4 +14,11 @@ pipelines:
           # You must commit the Gradle wrapper to your repository
           # https://docs.gradle.org/current/userguide/gradle_wrapper.html
           - bash ./gradlew -x test clean build
-          - git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD
+          - git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$DEV_HEROKU_APP_NAME.git HEAD
+  master:
+    - step:
+        caches:
+          - gradle
+        script:
+          - bash ./gradlew -x test clean build
+          - git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$PROD_HEROKU_APP_NAME.git HEAD
