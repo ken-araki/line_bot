@@ -3,12 +3,14 @@ package com.linebot.batch;
 import com.linebot.client.self.SelfClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
 @Slf4j
 @AllArgsConstructor
 @Controller
+@Profile({"local", "production"})
 public class KeepAliveBatch {
     private SelfClient selfClient;
 
