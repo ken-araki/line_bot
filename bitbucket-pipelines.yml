@@ -6,19 +6,20 @@
 image: openjdk:8
 
 pipelines:
-  develop:
-    - step:
-        caches:
-          - gradle
-        script: # Modify the commands below to build your repository.
-          # You must commit the Gradle wrapper to your repository
-          # https://docs.gradle.org/current/userguide/gradle_wrapper.html
-          - bash ./gradlew -x test clean build
-          - git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$DEV_HEROKU_APP_NAME.git HEAD
-  master:
-    - step:
-        caches:
-          - gradle
-        script:
-          - bash ./gradlew -x test clean build
-          - git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$PROD_HEROKU_APP_NAME.git HEAD
+  branches:
+    develop:
+      - step:
+          caches:
+            - gradle
+          script: # Modify the commands below to build your repository.
+            # You must commit the Gradle wrapper to your repository
+            # https://docs.gradle.org/current/userguide/gradle_wrapper.html
+            - bash ./gradlew -x test clean build
+            - git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$DEV_HEROKU_APP_NAME.git develop:master
+    master:
+      - step:
+          caches:
+            - gradle
+          script:
+            - bash ./gradlew -x test clean build
+            - git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$PROD_HEROKU_APP_NAME.git HEAD
