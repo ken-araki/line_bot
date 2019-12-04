@@ -1,0 +1,14 @@
+CREATE TABLE notice (
+    id SERIAL NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
+    "year" INTEGER NOT NULL DEFAULT 0,
+    "month" INTEGER NOT NULL DEFAULT 0,
+    "day" INTEGER NOT NULL DEFAULT 0,
+    "hour" INTEGER NOT NULL DEFAULT 0,
+    "minute" INTEGER NOT NULL DEFAULT 0,
+    day_of_week INTEGER NOT NULL DEFAULT 0,
+    type INTEGER NOT NULL DEFAULT 0,
+    deleted VARCHAR(1) NOT NULL DEFAULT '0',
+    created_at TIMESTAMP,
+    PRIMARY KEY (id)
+);
