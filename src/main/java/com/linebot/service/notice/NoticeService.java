@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -45,6 +46,17 @@ public class NoticeService {
 
     @Transactional(readOnly = true)
     public List<Notice> findTrainDelay() {
-        return noticeRepository.findByType(Type.TRAIN_DELAY.getCode());
+        return noticeRepository.findByTypeAndDeleted(Type.TRAIN_DELAY.getCode(), "0");
+    }
+
+    @Transactional
+    public void deleteNotice(String userId) {
+        noticeRepository.findByUserIdAndDeleted(userId, "0").stream()
+                .forEach(n -> {
+                    n.setDeleted("1");
+                    noticeRepository.save(n);
+                });
+
+
     }
 }

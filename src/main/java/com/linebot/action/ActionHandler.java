@@ -3,6 +3,7 @@ package com.linebot.action;
 import com.linebot.message.FlexMessageBuilder;
 import com.linebot.model.UserStatus;
 import com.linebot.service.UserStatusCacheService;
+import com.linebot.service.notice.NoticeService;
 import com.linebot.service.user.BotUserQiitaService;
 import com.linebot.service.user.BotUserService;
 import com.linecorp.bot.model.message.Message;
@@ -26,6 +27,7 @@ public class ActionHandler {
     private UserStatusCacheService userStatusCacheService;
     private BotUserService botUserService;
     private BotUserQiitaService botUserQiitaService;
+    private NoticeService noticeService;
     private FlexMessageBuilder flexMessageBuilder;
 
     public List<Message> follow(@NotNull String userId) {
@@ -40,6 +42,7 @@ public class ActionHandler {
     public void unfollow(@NotNull String userId) {
         botUserService.delete(userId);
         botUserQiitaService.delete(userId);
+        noticeService.deleteNotice(userId);
     }
 
     @NotNull
