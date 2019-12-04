@@ -47,6 +47,8 @@ public class GetTrainDelayResourceService {
                 .map(n -> n.getUserId())
                 .collect(Collectors.toSet());
 
-        pushMessageService.multicast(userIds, Collections.singletonList(new TextMessage(sb.toString())));
+        if (userIds.size() > 0) {
+            pushMessageService.multicast(userIds, Collections.singletonList(new TextMessage(sb.toString())));
+        }
     }
 }
