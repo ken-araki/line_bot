@@ -24,6 +24,7 @@ public class OrderAction extends Action {
     public List<Message> execute(@NotNull String userId, @NotNull String message) {
         Request request = Request.builder()
                 .userId(userId)
+                .request(message)
                 .status(0)
                 .deleted("0")
                 .createdAt(Utils.now())
