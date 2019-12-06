@@ -3,6 +3,7 @@ package com.linebot.action;
 import com.linebot.message.FlexMessageBuilder;
 import com.linebot.model.UserStatus;
 import com.linebot.service.UserStatusCacheService;
+import com.linebot.service.log.LogService;
 import com.linebot.service.notice.NoticeService;
 import com.linebot.service.user.BotUserQiitaService;
 import com.linebot.service.user.BotUserService;
@@ -29,6 +30,7 @@ public class ActionHandler {
     private BotUserQiitaService botUserQiitaService;
     private NoticeService noticeService;
     private FlexMessageBuilder flexMessageBuilder;
+    private LogService logService;
 
     public List<Message> follow(@NotNull String userId) {
         botUserService.insert(userId);
@@ -62,7 +64,7 @@ public class ActionHandler {
 
         Action action = getAction(status.getNextAction());
         if (action.check(message)) {
-            List<Message> result = action.execute(userId, message);
+            List<Message> result = execute(action, userId, message);
             userStatusCacheService.set(userId, createUserStatus(userId, action.getNextAction()));
             return result;
         } else {
@@ -74,10 +76,15 @@ public class ActionHandler {
         }
     }
 
+    private List<Message> execute(@NotNull Action action, @NotNull String userId, @NotNull String message) {
+        logService.insertBotLog(userId, action.getClass().getName(), message);
+        return action.execute(userId, message);
+    }
+
     private List<Message> executeStartAction(ActionSelector actionSelector, String userId, String message) {
         Action action = getStartAction(actionSelector);
         // スタートワードなのでチェック不要でexecute実行する
-        List<Message> result = action.execute(userId, message);
+        List<Message> result = execute(action, userId, message);
         userStatusCacheService.set(userId, createUserStatus(userId, action.getNextAction()));
         return result;
     }

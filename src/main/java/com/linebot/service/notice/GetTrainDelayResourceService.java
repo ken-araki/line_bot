@@ -2,6 +2,7 @@ package com.linebot.service.notice;
 
 import com.linebot.client.train.TrainDelayClient;
 import com.linebot.model.train.TrainDelay;
+import com.linebot.service.log.LogService;
 import com.linebot.service.message.PushMessageService;
 import com.linebot.util.Utils;
 import com.linecorp.bot.model.message.TextMessage;
@@ -24,6 +25,7 @@ public class GetTrainDelayResourceService {
     private PushMessageService pushMessageService;
     private TrainDelayClient trainDelayClient;
     private NoticeService noticeService;
+    private LogService logService;
 
     public void execute() {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Tokyo"));
@@ -40,7 +42,7 @@ public class GetTrainDelayResourceService {
                     .filter(r -> !StringUtils.isEmpty(r))
                     .forEach(r -> sb.append(Utils.LINE_SEPARATOR).append(r.getName()));
         }
-
+        logService.insertTrainDelay(results);
         Set<String> userIds = noticeService.findTrainDelay().stream()
                 .filter(n -> n.getHour() == hour)
                 .filter(n -> n.getMinute() == minute)
