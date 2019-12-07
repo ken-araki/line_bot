@@ -77,7 +77,7 @@ public class ActionHandler {
     }
 
     private List<Message> execute(@NotNull Action action, @NotNull String userId, @NotNull String message) {
-        logService.insertBotLog(userId, action.getClass().getName(), message);
+        logService.insertBotLog(userId, action.getClass().getSimpleName(), message);
         return action.execute(userId, message);
     }
 
