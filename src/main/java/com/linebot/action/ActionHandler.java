@@ -1,9 +1,10 @@
 package com.linebot.action;
 
-import com.linebot.entity.BotUser;
 import com.linebot.message.FlexMessageBuilder;
 import com.linebot.model.UserStatus;
 import com.linebot.service.UserStatusCacheService;
+import com.linebot.service.log.LogService;
+import com.linebot.service.notice.NoticeService;
 import com.linebot.service.user.BotUserQiitaService;
 import com.linebot.service.user.BotUserService;
 import com.linecorp.bot.model.message.Message;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -28,19 +28,11 @@ public class ActionHandler {
     private UserStatusCacheService userStatusCacheService;
     private BotUserService botUserService;
     private BotUserQiitaService botUserQiitaService;
+    private NoticeService noticeService;
     private FlexMessageBuilder flexMessageBuilder;
+    private LogService logService;
 
     public List<Message> follow(@NotNull String userId) {
-        // フリープランの場合、メッセージは月1,000通となっているため、
-        // 機能を提供するユーザは30とする。
-        // 何かいい方法を見つけたなら消す
-        List<BotUser> users = botUserService.findActiveUser();
-        if (users.size() >= 30) {
-            return Collections.singletonList(
-                    new TextMessage("ユーザ登録数が上限に達しています。利用可能までしばしお待ちください。")
-            );
-        }
-        // ここまで
         botUserService.insert(userId);
         return Arrays.asList(
                 new TextMessage("ユーザ登録を行いました。以下操作が実行可能です。"),
@@ -52,18 +44,11 @@ public class ActionHandler {
     public void unfollow(@NotNull String userId) {
         botUserService.delete(userId);
         botUserQiitaService.delete(userId);
+        noticeService.deleteNotice(userId);
     }
 
-    @Nullable
+    @NotNull
     public List<Message> handle(@NotNull String userId, @NotNull String message) {
-        // ここの部分もユーザ上限によるもの
-        // メッセージを無駄打ちしないように、Nullを返す
-        // ここを消したなら@Nullable -> @NotNull へ戻す
-        BotUser user = botUserService.findActiveUserByUserId(userId);
-        if (user == null || !"0".equals(user.getDeleted())) {
-            return null;
-        }
-        // ここまで
         ActionSelector actionSelector = ActionSelector.getByStartWord(message);
         if (actionSelector != null) {
             return executeStartAction(actionSelector, userId, message);
@@ -79,7 +64,7 @@ public class ActionHandler {
 
         Action action = getAction(status.getNextAction());
         if (action.check(message)) {
-            List<Message> result = action.execute(userId, message);
+            List<Message> result = execute(action, userId, message);
             userStatusCacheService.set(userId, createUserStatus(userId, action.getNextAction()));
             return result;
         } else {
@@ -91,10 +76,15 @@ public class ActionHandler {
         }
     }
 
+    private List<Message> execute(@NotNull Action action, @NotNull String userId, @NotNull String message) {
+        logService.insertBotLog(userId, action.getClass().getSimpleName(), message);
+        return action.execute(userId, message);
+    }
+
     private List<Message> executeStartAction(ActionSelector actionSelector, String userId, String message) {
         Action action = getStartAction(actionSelector);
         // スタートワードなのでチェック不要でexecute実行する
-        List<Message> result = action.execute(userId, message);
+        List<Message> result = execute(action, userId, message);
         userStatusCacheService.set(userId, createUserStatus(userId, action.getNextAction()));
         return result;
     }

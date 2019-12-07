@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 public class NoticeTrainDelayBatch {
     private GetTrainDelayResourceService getTrainDelayResourceService;
 
-    @Scheduled(cron = "0 5 8 * * *", zone = "Asia/Tokyo")
+    @Scheduled(cron = "0 */20 7-9 * * *", zone = "Asia/Tokyo")
     public void execute() {
         getTrainDelayResourceService.execute();
     }

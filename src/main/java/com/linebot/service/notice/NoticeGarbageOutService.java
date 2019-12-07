@@ -25,12 +25,11 @@ public class NoticeGarbageOutService {
 
     public void executeDayBefore() {
         if (this.isTommorowFirstOrThirdFriday()) {
-            return;
+            Set<String> userIds = botUserService.findActiveUser().stream()
+                    .map(BotUser::getUserId)
+                    .collect(Collectors.toSet());
+            pushMessageService.multicast(userIds, Collections.singletonList(new TextMessage("明日は資源ごみの日です。")));
         }
-        Set<String> userIds = botUserService.findActiveUser().stream()
-                .map(BotUser::getUserId)
-                .collect(Collectors.toSet());
-        pushMessageService.multicast(userIds, Collections.singletonList(new TextMessage("明日は資源ごみの日です。")));
     }
 
     public boolean checkDay(int add, BiFunction<Integer, DayOfWeek, Boolean> fn) {
@@ -46,7 +45,8 @@ public class NoticeGarbageOutService {
      */
     public boolean isTommorowFirstOrThirdFriday() {
         return checkDay(1, (day, dayOfWeek) -> {
-                    return DayOfWeek.THURSDAY == dayOfWeek && ((1 <= day && day <= 7) || (15 <= day && day <= 21));
+                    // あしたが、第1, 第3金曜日の場合はTrueを返す
+                    return DayOfWeek.FRIDAY == dayOfWeek && ((1 <= day && day <= 7) || (15 <= day && day <= 21));
                 }
         );
     }
